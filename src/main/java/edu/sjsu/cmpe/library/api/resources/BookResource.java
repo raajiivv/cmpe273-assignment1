@@ -61,14 +61,14 @@ public class BookResource {
 
 	String location = "/books/" + savedBook.getIsbn();
 	//BookDto bookResponse = new BookDto(savedBook);
-	LinksDto bookResponse = new LinksDto();
-	bookResponse.addLink(new LinkDto("view-book", location, "GET"));
-	bookResponse.addLink(new LinkDto("update-book", location, "PUT"));
-	bookResponse.addLink(new LinkDto("delete-book", location, "DELETE"));
+	LinksDto links = new LinksDto();
+	links.addLink(new LinkDto("view-book", location, "GET"));
+	links.addLink(new LinkDto("update-book", location, "PUT"));
+	links.addLink(new LinkDto("delete-book", location, "DELETE"));
 	
 	// Add other links if needed
 
-	return Response.status(201).entity(bookResponse).build();
+	return Response.status(201).entity(links).build();
     }
     
     @DELETE
@@ -99,7 +99,7 @@ public class BookResource {
     		links.addLink(new LinkDto("view-book", "/books/"+isbn, "GET"));
     		links.addLink(new LinkDto("update-book", "/books/"+isbn, "PUT"));
     		links.addLink(new LinkDto("delete-book", "/books/"+isbn, "DELETE"));
-    		//links.addLink(new LinkDto("view-book", "/books/"+isbn, "GET"));
+    		links.addLink(new LinkDto("create-review", "/books/"+isbn+"reviews", "POST"));
     		return Response.ok().entity(links).build();    		
     	}
     	else

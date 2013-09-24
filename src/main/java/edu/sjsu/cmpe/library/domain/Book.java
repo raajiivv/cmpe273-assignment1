@@ -1,7 +1,11 @@
 package edu.sjsu.cmpe.library.domain;
 
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
+import java.util.ListIterator;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -18,11 +22,20 @@ public class Book {
     private int numPages;
     private String status = "available";
     List<Author> authors;
+    List<Review> reviews = new ArrayList<Review>();
 
 
 
     
-    @JsonProperty("publication-date")
+    public List<Review> getReviews() {
+		return reviews;
+	}
+
+	public void setReviews(List<Review> reviews) {
+		this.reviews = reviews;
+	}
+
+	@JsonProperty("publication-date")
     public String getPublicationDate() {
 		return publicationDate;
 	}

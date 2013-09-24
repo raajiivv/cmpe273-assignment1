@@ -3,21 +3,30 @@ package edu.sjsu.cmpe.library.repository;
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
+import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
+import edu.sjsu.cmpe.library.domain.Author;
 import edu.sjsu.cmpe.library.domain.Book;
+import edu.sjsu.cmpe.library.domain.Review;
 
 public class BookRepository implements BookRepositoryInterface {
     /** In-memory map to store books. (Key, Value) -> (ISBN, Book) */
     private final ConcurrentHashMap<Long, Book> bookInMemoryMap;
-
+    private final AuthorRepositoryInterface authorRepository;
+    private final ReviewRepositoryInterface reviewRepository;
+    
     /** Never access this key directly; instead use generateISBNKey() */
     private long isbnKey;
-
-    public BookRepository(ConcurrentHashMap<Long, Book> bookMap) {
+    
+    public BookRepository(ConcurrentHashMap<Long, Book> bookMap, 
+    						AuthorRepositoryInterface authorRepository,
+    						ReviewRepositoryInterface reviewRepository) {
 	checkNotNull(bookMap, "bookMap must not be null for BookRepository");
 	bookInMemoryMap = bookMap;
 	isbnKey = 0;
+	this.authorRepository = authorRepository;
+	this.reviewRepository = reviewRepository;
     }
 
     /**
@@ -30,6 +39,7 @@ public class BookRepository implements BookRepositoryInterface {
 	// increment existing isbnKey and return the new value
 	return Long.valueOf(++isbnKey);
     }
+    
 
     /**
      * This will auto-generate unique ISBN for new books.
@@ -41,10 +51,10 @@ public class BookRepository implements BookRepositoryInterface {
 	Long isbn = generateISBNKey();
 	newBook.setIsbn(isbn);
 	// TODO: create and associate other fields such as author
-
+	List<Author> authors = newBook.getAuthors();
+	newBook.setAuthors(authorRepository.generateAuthorIdKey(authors));
 	// Finally, save the new book into the map
 	bookInMemoryMap.putIfAbsent(isbn, newBook);
-
 	return newBook;
     }
 
@@ -81,4 +91,8 @@ public class BookRepository implements BookRepositoryInterface {
     	return false;
     	}
 
+    public Review saveReview() {
+    	Review tempReview = new Review();
+		return tempReview;
+	}
 }
