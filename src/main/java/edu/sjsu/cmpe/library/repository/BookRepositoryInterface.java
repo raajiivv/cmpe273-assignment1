@@ -1,6 +1,7 @@
 package edu.sjsu.cmpe.library.repository;
 
 import edu.sjsu.cmpe.library.domain.Book;
+import edu.sjsu.cmpe.library.domain.Review;
 
 /**
  * Book repository interface.
@@ -30,6 +31,19 @@ public interface BookRepositoryInterface {
     
     boolean deleteBookByISBN (Long isbn);
     boolean updateBookStatusByISBN(Long isbn, String status);
+
+	/**
+	 * @param long1
+	 * @param review
+	 * @return
+	 */
+	//Review saveReview(Long long1, Review review);
+
+	/**
+	 * @param tempBook
+	 * @return 
+	 */
+	//Book saveReviews(Book tempBook);
 
     // TODO: add other operations here!
 }

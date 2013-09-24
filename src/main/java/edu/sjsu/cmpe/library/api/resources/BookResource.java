@@ -19,6 +19,7 @@ import edu.sjsu.cmpe.library.domain.Book;
 import edu.sjsu.cmpe.library.dto.BookDto;
 import edu.sjsu.cmpe.library.dto.LinkDto;
 import edu.sjsu.cmpe.library.dto.LinksDto;
+import edu.sjsu.cmpe.library.repository.AuthorRepositoryInterface;
 import edu.sjsu.cmpe.library.repository.BookRepositoryInterface;
 
 @Path("/v1/books")
@@ -27,6 +28,7 @@ import edu.sjsu.cmpe.library.repository.BookRepositoryInterface;
 public class BookResource {
     /** bookRepository instance */
     private final BookRepositoryInterface bookRepository;
+    private final AuthorRepositoryInterface authorRepository;
 
     /**
      * BookResource constructor
@@ -34,8 +36,9 @@ public class BookResource {
      * @param bookRepository
      *            a BookRepository instance
      */
-    public BookResource(BookRepositoryInterface bookRepository) {
+    public BookResource(BookRepositoryInterface bookRepository, AuthorRepositoryInterface authorRepository) {
 	this.bookRepository = bookRepository;
+	this.authorRepository = authorRepository;
     }
 
     @GET
@@ -58,6 +61,7 @@ public class BookResource {
     public Response createBook(Book request) {
 	// Store the new book in the BookRepository so that we can retrieve it.
 	Book savedBook = bookRepository.saveBook(request);
+	authorRepository.saveAuthors(request);
 
 	String location = "/books/" + savedBook.getIsbn();
 	//BookDto bookResponse = new BookDto(savedBook);

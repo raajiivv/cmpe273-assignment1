@@ -13,20 +13,20 @@ import edu.sjsu.cmpe.library.domain.Review;
 public class BookRepository implements BookRepositoryInterface {
     /** In-memory map to store books. (Key, Value) -> (ISBN, Book) */
     private final ConcurrentHashMap<Long, Book> bookInMemoryMap;
-    private final AuthorRepositoryInterface authorRepository;
-    private final ReviewRepositoryInterface reviewRepository;
+    //private final AuthorRepositoryInterface authorRepository;
+    //private final ReviewRepositoryInterface reviewRepository;
     
     /** Never access this key directly; instead use generateISBNKey() */
     private long isbnKey;
     
-    public BookRepository(ConcurrentHashMap<Long, Book> bookMap, 
+    public BookRepository(ConcurrentHashMap<Long, Book> bookMap/*, 
     						AuthorRepositoryInterface authorRepository,
-    						ReviewRepositoryInterface reviewRepository) {
+    						ReviewRepositoryInterface reviewRepository*/) {
 	checkNotNull(bookMap, "bookMap must not be null for BookRepository");
 	bookInMemoryMap = bookMap;
 	isbnKey = 0;
-	this.authorRepository = authorRepository;
-	this.reviewRepository = reviewRepository;
+	//this.authorRepository = authorRepository;
+	//this.reviewRepository = reviewRepository;
     }
 
     /**
@@ -51,8 +51,9 @@ public class BookRepository implements BookRepositoryInterface {
 	Long isbn = generateISBNKey();
 	newBook.setIsbn(isbn);
 	// TODO: create and associate other fields such as author
-	List<Author> authors = newBook.getAuthors();
-	newBook.setAuthors(authorRepository.generateAuthorIdKey(authors));
+	/*List<Author> authors = newBook.getAuthors();
+	newBook.setAuthors(authorRepository.generateAuthorIdKey(authors));*/
+
 	// Finally, save the new book into the map
 	bookInMemoryMap.putIfAbsent(isbn, newBook);
 	return newBook;
@@ -91,8 +92,19 @@ public class BookRepository implements BookRepositoryInterface {
     	return false;
     	}
 
-    public Review saveReview() {
-    	Review tempReview = new Review();
-		return tempReview;
+/*    public Book saveReviews(Book newBook) {
+    	List<Review> reviews = newBook.getReviews();
+    	newBook.setReviews(reviewRepository.generateReviewIdKey(reviews));
+    	return newBook;
+    	
+    }*/
+	/* (non-Javadoc)
+	 * @see edu.sjsu.cmpe.library.repository.BookRepositoryInterface#saveReview(java.lang.Long, edu.sjsu.cmpe.library.domain.Review)
+	 */
+/*	@Override
+	public Review saveReview(Long long1, Review review) {
+		// TODO Auto-generated method stub
+		return null;
 	}
+*/
 }
