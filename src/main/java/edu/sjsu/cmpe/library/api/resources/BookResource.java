@@ -1,11 +1,14 @@
 package edu.sjsu.cmpe.library.api.resources;
 
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
@@ -15,6 +18,7 @@ import com.yammer.metrics.annotation.Timed;
 import edu.sjsu.cmpe.library.domain.Book;
 import edu.sjsu.cmpe.library.dto.BookDto;
 import edu.sjsu.cmpe.library.dto.LinkDto;
+import edu.sjsu.cmpe.library.dto.LinksDto;
 import edu.sjsu.cmpe.library.repository.BookRepositoryInterface;
 
 @Path("/v1/books")
@@ -56,12 +60,52 @@ public class BookResource {
 	Book savedBook = bookRepository.saveBook(request);
 
 	String location = "/books/" + savedBook.getIsbn();
-	BookDto bookResponse = new BookDto(savedBook);
+	//BookDto bookResponse = new BookDto(savedBook);
+	LinksDto bookResponse = new LinksDto();
 	bookResponse.addLink(new LinkDto("view-book", location, "GET"));
-	bookResponse.addLink(new LinkDto("update-book", location, "POST"));
+	bookResponse.addLink(new LinkDto("update-book", location, "PUT"));
+	bookResponse.addLink(new LinkDto("delete-book", location, "DELETE"));
+	
 	// Add other links if needed
 
 	return Response.status(201).entity(bookResponse).build();
     }
+    
+    @DELETE
+    @Path("/{isbn}")
+    @Timed(name = "delete-book")
+    public Response deleteBook(@PathParam("isbn") LongParam isbn){
+    	//Book book = new Book(); //bookRepository.getBookByISBN(isbn.get());
+    	LinksDto links = new LinksDto();
+    	//BookDto links = new BookDto(null);
+    	if (bookRepository.deleteBookByISBN(isbn.get())){
+    		System.out.println("Book Deleted");
+        	links.addLink(new LinkDto("create-book", "/books/", "POST"));
+        	return Response.status(200).entity(links).build();
+    	}
+    	else
+    		return Response.status(400).build();
+        	
+    	}
+    
+    @PUT
+    @Path("/{isbn}")
+    @Timed(name = "update-book")
+    public Response updateBookStatusByISBN(@PathParam("isbn") LongParam isbn, @QueryParam("status") String status){
+    	//Book book = new Book();
+    	if(bookRepository.updateBookStatusByISBN(isbn.get(), status)) {
+    		//Book book = bookRepository.getBookByISBN(isbn.get());
+    		LinksDto links = new LinksDto();
+    		links.addLink(new LinkDto("view-book", "/books/"+isbn, "GET"));
+    		links.addLink(new LinkDto("update-book", "/books/"+isbn, "PUT"));
+    		links.addLink(new LinkDto("delete-book", "/books/"+isbn, "DELETE"));
+    		//links.addLink(new LinkDto("view-book", "/books/"+isbn, "GET"));
+    		return Response.ok().entity(links).build();    		
+    	}
+    	else
+    		return Response.status(404).build();    	
+    	
+    }
+    
 }
 

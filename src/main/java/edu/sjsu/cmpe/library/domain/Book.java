@@ -1,13 +1,72 @@
 package edu.sjsu.cmpe.library.domain;
 
 
+import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+
+/**
+ * @author Rajiv
+ *
+ */
 public class Book {
     private long isbn;
     private String title;
+    private String publicationDate;
+    private String Language;
+    private int numPages;
+    private String status = "available";
+    List<Author> authors;
 
-    // add more fields here
 
-    /**
+
+    
+    @JsonProperty("publication-date")
+    public String getPublicationDate() {
+		return publicationDate;
+	}
+
+	public void setPublicationDate(String publicationDate) {
+		this.publicationDate = publicationDate;
+	}
+
+	public List<Author> getAuthors() {
+		return authors;
+	}
+
+	public void setAuthors(List<Author> authors) {
+		this.authors = authors;
+	}
+
+	public String getLanguage() {
+		return Language;
+	}
+
+	public void setLanguage(String language) {
+		Language = language;
+	}
+
+
+
+	@JsonProperty("num-pages")
+	public int getNumPages() {
+		return numPages;
+	}
+
+	public void setNumPages(int numPages) {
+		this.numPages = numPages;
+	}
+
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
+	}
+
+	/**
      * @return the isbn
      */
     public long getIsbn() {

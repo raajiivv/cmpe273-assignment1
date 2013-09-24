@@ -57,5 +57,28 @@ public class BookRepository implements BookRepositoryInterface {
 		"ISBN was %s but expected greater than zero value", isbn);
 	return bookInMemoryMap.get(isbn);
     }
+    
+    public boolean deleteBookByISBN(Long isbn) {
+    	//checkNotNull(newBook, "newBook instance must not be null");
+    	if (bookInMemoryMap.containsKey(isbn)) {
+    		bookInMemoryMap.remove(isbn);
+    		return true;
+    	}
+    	else
+    		return false;
+    	
+    }
+    
+    public boolean updateBookStatusByISBN(Long isbn, String status){
+    	Book book = new Book();
+    	if (bookInMemoryMap.containsKey(isbn)) {
+    		book = bookInMemoryMap.get(isbn);
+    		book.setStatus(status);
+    		bookInMemoryMap.replace(isbn, book);
+    		return true;
+    	}
+    	
+    	return false;
+    	}
 
 }
